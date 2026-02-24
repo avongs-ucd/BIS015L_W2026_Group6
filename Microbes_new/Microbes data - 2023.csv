@@ -1,0 +1,49 @@
+Section,Media (NA or SDA),"Media additive (none, cyc, or amp)",Inside or Outside,Exposure duration (min),Days of incubation,# Mold-like colonies (have hyphae),"# Non-mold-like colonies (e.g., no hyphae)",Total # colonies,Group Name,Notes
+A01,NA,cyc,inside,1,4,0,0,0,The Streakers,
+A02,NA,cyc,inside,1,2,0,1,1,Athlete's Foot,
+A03,NA,cyc,inside,1,2,0,2,2,MicroMarkums,"We put our plate by the eyewash station, lots of foot traffic nearby"
+A04,NA,cyc,inside,1,4,0,1,1,Four FunGuys,Exposure away from door on opposite end of classroom
+A01,NA,cyc,inside,10,4,0,3,3,,
+A02,NA,cyc,inside,10,2,0,2,2,Yes I Kan,
+A03,NA,cyc,inside,10,2,0,1,1,Pipettemen,Next to main lab door on black countertop
+A04,NA,cyc,inside,10,2,0,1,1,The Cultured,
+A01,NA,cyc,inside,30,4,0,8,8,Group 3,
+A02,NA,cyc,inside,30,2,1,14,15,Party-mecium!,
+A03,NA,cyc,inside,30,2,0,11,11,NeverBacdown,Placed on the window sill
+A04,NA,cyc,inside,30,2,0,7,7,Charlie's Angels,
+A01,NA,cyc,outside,1,4,0,9,9,SHELLFISH,
+A02,NA,cyc,outside,1,4,0,11,11,Group 2,
+A03,NA,cyc,outside,1,2,0,6,6,Cereus Microbes,"placed under a bush, no wind, outside temp was 90 degrees F"
+A04,NA,cyc,outside,1,2,1,14,15,The Melted Glove,
+A01,NA,cyc,outside,10,4,1,44,45,Smooth Operator,
+A02,NA,cyc,outside,10,4,0,56,56,Heisnberg,This data was entered incorrectly. The 56 colonies were actually non-mold-like. 
+A03,NA,cyc,outside,10,2,0,69,69,Black Death Rats,"no wind, elevation 1 ft"
+A04,NA,cyc,outside,10,2,0,36,36,Graddy's Baddies,
+A01,NA,cyc,outside,30,4,0,96,96,Contamination Station,Dr. M had to infer the media type & duration of exposure based on which samples were not yet reported
+A02,NA,cyc,outside,30,4,0,121,121,"30 deg, not 85 deg",
+A03,NA,cyc,outside,30,2,0,129,129,Apotosis,"hot, under shade, bottom of railing, behind building"
+A04,NA,cyc,outside,30,2,0,161,161,Firmicuties,Exposure was in the shade on the ground of the parking lot
+A01,SDA,amp,inside,1,4,0,0,0,The Streakers,
+A02,SDA,amp,inside,1,4,0,0,0,Athlete's Foot,
+A03,SDA,amp,inside,1,4,0,0,0,MicroMarkums,"eyewash station, a lot of people pass it"
+A04,SDA,amp,inside,1,4,0,0,0,Four FunGuys,Exposure was in the corner across from the door way
+A01,SDA,amp,inside,10,4,1,0,1,,
+A02,SDA,amp,inside,10,4,2,0,2,Yes I Kan,
+A03,SDA,amp,inside,10,4,2,1,3,Pipettemen,Next to main lab door on black countertop
+A04,SDA,amp,inside,10,4,0,1,1,The Cultured,
+A01,SDA,amp,inside,30,4,3,1,4,Group 3,
+A02,SDA,amp,inside,30,4,2,2,4,Party-mecium!,
+A03,SDA,amp,inside,30,4,4,0,4,NeverBacdown,Placed on the window sill
+A04,SDA,amp,inside,30,4,2,0,2,Charlie's Angels,
+A01,SDA,amp,outside,1,4,12,2,14,,
+A02,SDA,amp,outside,1,4,11,0,11,Group 2,
+A03,SDA,amp,outside,1,4,6,0,6,Cereus Microbes,"under tree branch, outside temp 90 but slide under shade, no wind"
+A04,SDA,amp,outside,1,2,3,8,11,The Melted Glove,
+A01,SDA,amp,outside,10,4,14,17,31,Smooth Operator,
+A02,SDA,amp,outside,10,4,61,0,61,Heisnberg,
+A03,SDA,amp,outside,10,4,176,0,176,Black Death Rats,"Underneath a tree, on top of a log"
+A04,SDA,amp,outside,10,4,28,0,28,Graddy's Baddies,too much growth to get an accurate count
+A01,SDA,amp,outside,30,4,24,19,43,Contamination Station,
+A02,SDA,amp,outside,30,4,122,0,122,"30 deg, not 85 deg",
+A03,SDA,amp,outside,30,4,139,0,139,apoptosis,was set outside near a small plant and near the ramp
+A04,SDA,amp,outside,30,4,84,47,131,Firmicuties,"Mostly dark looking colonies, some white/light in color"

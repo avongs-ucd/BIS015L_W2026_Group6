@@ -3,3 +3,83 @@ title: "Project"
 output: html_document
 ---
 
+```{r}
+library(tidyverse)
+library(googlesheets4)
+library(janitor)
+```
+
+
+```{r}
+gs4_auth()
+sheet1 <- read_sheet("https://docs.google.com/spreadsheets/d/1ISsEgwkutr613YB5oHp1z4cv97dwaDSQ8dc7-ZC-jPQ/edit?usp=sharing")
+```
+
+```{r}
+sheet2 <- read_sheet("https://docs.google.com/spreadsheets/d/1ISsEgwkutr613YB5oHp1z4cv97dwaDSQ8dc7-ZC-jPQ/edit?usp=sharing", sheet = "2024")
+```
+
+
+```{r}
+sheet3 <- read_sheet("https://docs.google.com/spreadsheets/d/1ISsEgwkutr613YB5oHp1z4cv97dwaDSQ8dc7-ZC-jPQ/edit?usp=sharing", sheet= "2026")
+```
+
+```{r}
+clean1 <- sheet1 %>% clean_names() %>%
+  mutate(media_na_or_sda=as.factor(media_na_or_sda),
+         inside_or_outside=as.factor(inside_or_outside),
+         exposure_duration_min=as.factor(exposure_duration_min),
+         section=as.factor(section),
+         media_additive_none_cyc_or_amp=as.factor(media_additive_none_cyc_or_amp)) %>%
+  mutate(media_na_or_sda= recode(media_na_or_sda,
+                                   "NA"="NUA",
+                                   "SDA"="SDA")) %>%
+  select(-"group_name",-"notes")
+```
+
+```{r}
+clean2 <-  sheet2 %>% clean_names() %>%
+  mutate(media_na_or_sda=as.factor(media_na_or_sda),
+         inside_or_outside=as.factor(inside_or_outside),
+         exposure_duration_min=as.factor(exposure_duration_min),
+         section=as.factor(section),
+         media_additive_none_cyc_or_amp=as.factor(media_additive_none_cyc_or_amp)) %>%
+  mutate(media_na_or_sda= recode(media_na_or_sda,
+                                   "NA"="NUA",
+                                   "SDA"="SDA")) %>%
+  mutate(media_additive_none_cyc_or_amp= recode(media_additive_none_cyc_or_amp,
+                                   "ampicillin"="amp",
+                                   "Cycloheximide 0.0004%"= "cyc",
+                                   "AMP 50ug"="amp",
+                                   "AMP 50 ug"="amp")) %>%
+  select(-"group_name",-"notes")
+```
+
+
+```{r}
+clean3 <- sheet3 %>% clean_names() %>%
+  mutate(media_na_or_sda=as.factor(media_na_or_sda),
+         inside_or_outside=as.factor(inside_or_outside),
+         exposure_duration_min=as.factor(exposure_duration_min),
+         section=as.factor(section),
+         media_additive_none_cyc_or_amp=as.factor(media_additive_none_cyc_or_amp)) %>%
+  mutate(media_na_or_sda= recode(media_na_or_sda,
+                                   "NA"="NUA",
+                                   "SDA"="SDA")) %>%
+  mutate(media_additive_none_cyc_or_amp= recode(media_additive_none_cyc_or_amp,
+                                   "CHX"="cyc",
+                                   "Amp"= "amp",
+                                   "AMP"="amp",
+                                   "AMP 50 ug"="amp")) %>%
+  mutate(inside_or_outside= recode(inside_or_outside,
+                                   "Inside"="inside",
+                                   "inside"="inside",
+                                   "Outside"="outside",
+                                   "outside"="outside")) %>%
+  mutate(across(where(is.list), as.double)) %>%
+  select(-"group_name",-"notes")
+  #mutate(number_mold_looking_colonies_have_hyphae=recode(number_mold_looking_colonies_have_hyphae,
+                                               #          "NA"=0))
+#do a mutate string replace or if else to replace o=0 in hyphae column (currently an NA on clean3) someone fucked up in my class swear to god not me.
+```
+
