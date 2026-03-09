@@ -1,0 +1,78 @@
+library(readr)
+clean_data_mold <- read_csv("C:/Users/lalva/OneDrive/Desktop/BIS015L_W2026_Group6-main/Microbes_new/clean_data_mold.csv")
+View(clean_data_mold)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(janitor)
+
+names(clean_data_mold)
+
+clean_data_mold %>% 
+  select(Section,`Total Colony counts`) %>%
+  ggplot(aes(x=Section,y=`Total Colony counts`,fill = Section))+
+  geom_col() #section and total colony counts
+
+clean_data_mold %>% 
+  select(Section,"# Bacteria looking colonies") %>% 
+  ggplot(aes(x=Section,y=`# Bacteria looking colonies`,fill = Section))+
+  geom_col() #section and bacteria
+
+clean_data_mold %>% 
+  select(Section,"# Mold looking colonies \n(Hyphae)") %>% 
+  ggplot(aes(x=Section,y=`# Mold looking colonies \n(Hyphae)`,fill = Section))+
+  geom_col() #section and mold
+
+
+
+
+clean_data_mold2 <- clean_data_mold %>% 
+  pivot_longer(cols="Inside or Outside",
+               values_to = "Location") %>% 
+  clean_names() %>% 
+  mutate(location=str_to_title(location))
+
+names(clean_data_mold2)
+
+clean_data_mold2 %>% 
+  select(location,number_bacteria_looking_colonies,number_mold_looking_colonies_hyphae) %>%
+  ggplot(aes(x=number_bacteria_looking_colonies,y=number_mold_looking_colonies_hyphae,color=location))+
+  geom_jitter(size=2.8,alpha=.8) #bacteria and mold vs inside outside, dot plot is not great try something else
+
+
+
+
+clean_data_mold3 <- clean_data_mold2 %>% 
+  pivot_longer(cols = "media_additive",
+               names_to = "media_additive",
+               values_to = "media_add") %>% 
+  mutate(media_add=str_to_title(media_add))
+
+clean_data_mold3 %>% 
+  select(media_add)
+
+clean_data_mold3 %>%
+  select(media_add,number_bacteria_looking_colonies) %>%
+  ggplot(aes(x=media_add,y=number_bacteria_looking_colonies,color=media_add))+
+  geom_boxplot() #media add and bacteria
+
+clean_data_mold3 %>%
+  select(media_add,number_mold_looking_colonies_hyphae) %>%
+  ggplot(aes(x=media_add,y=number_mold_looking_colonies_hyphae,color=media_add))+
+  geom_boxplot() #media add and mold
+
+names(clean_data_mold3)
+
+clean_data_mold3 %>% 
+  select(section,media_add) %>% 
+  filter(media_add=="Amp") %>% 
+  count(media_add) %>% 
+  ggplot(aes(x=section,y=n,fill=section))+
+  geom_col() #why no work?
+
+
+  clean_data_mold3 %>% 
+    select(exposure_duration_min,total_colony_counts, media_add) %>% 
+    ggplot(aes(x=exposure_duration_min,y=total_colony_counts, color = media_add,group=media_add))+
+    stat_summary(fun=mean, geom="line",linewidth=1)+
+    stat_summary(fun=mean, geom="point",size=3)
