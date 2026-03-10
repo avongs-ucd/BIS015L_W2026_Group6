@@ -33,6 +33,7 @@ clean1 <- sheet1 %>% clean_names() %>%
   mutate(media_na_or_sda= recode(media_na_or_sda,
                                    "NA"="NUA",
                                    "SDA"="SDA")) %>%
+  mutate(year = "2023") %>% #added to mark year of data - Alan 
   select(-"group_name",-"notes")
 ```
 
@@ -51,6 +52,7 @@ clean2 <-  sheet2 %>% clean_names() %>%
                                    "Cycloheximide 0.0004%"= "cyc",
                                    "AMP 50ug"="amp",
                                    "AMP 50 ug"="amp")) %>%
+  mutate(year = "2024") %>% #added to mark year of data - Alan 
   select(-"group_name",-"notes")
 ```
 
@@ -76,8 +78,13 @@ clean3 <- sheet3 %>% clean_names() %>%
                                    "Outside"="outside",
                                    "outside"="outside")) %>%
   mutate(across(where(is.list), as.double)) %>%
+  mutate(year = "2026") %>% #added to mark year of data - Alan 
   select(-"group_name",-"notes")
   #mutate(number_mold_looking_colonies_have_hyphae=recode(number_mold_looking_colonies_have_hyphae,
                                                #          "NA"=0))
 #do a mutate string replace or if else to replace o=0 in hyphae column (currently an NA on clean3) someone fucked up in my class swear to god not me.
 ```
+
+
+
+
