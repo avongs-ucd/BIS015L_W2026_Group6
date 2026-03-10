@@ -408,19 +408,22 @@ server <- function(input, output, session) {
     
     
     if input$plot == "bar" {
-      ggplot(df, aes(x = section, y = total_colony_counts, fill = section)) +
+      clean_data_mold %>% 
+        ggplot(aes(x = section, y = total_colony_counts, fill = section)) +
         geom_col() +
         labs(title = "Total Colony Counts per Section") 
       }
     
     else if input$plot == "boxplot" {
-      ggplot(df, aes(x = media_add, y = number_bacteria_looking_colonies, color = media_add)) +
+      clean_data_mold %>%   
+        ggplot(aes(x = media_add, y = number_bacteria_looking_colonies, color = media_add)) +
         geom_boxplot() +
         labs(title = "Bacteria Colonies by Media Additive")
       }
     
     else if input$plot == "line" {
-      ggplot(df, aes(x = exposure_time?, y = number_bacteria_looking_colonies, color = media_add)) +
+      clean_data_mold %>% 
+       ggplot(aes(x = exposure_time?, y = number_bacteria_looking_colonies, color = media_add)) +
         geom_line() +
         labs(title = "Growth Over Time")
       }
