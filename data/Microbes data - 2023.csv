@@ -1,4 +1,4 @@
-Section,Media (NA or SDA),"Media additive (none, cyc, or amp)",Inside or Outside,Exposure duration (min),Days of incubation,# Mold-like colonies (have hyphae),"# Non-mold-like colonies (e.g., no hyphae)",Total # colonies,Group Name,Notes
+Section,Media (NA or SDA),"Media additive (none, cyc, or amp)",Inside or Outside,Exposure duration (min),Days of incubation,# Mold-looking colonies (have hyphae) ,"# Non-mold-looking colonies (e.g., no hyphae) ",Total # colonies,Group Name,Notes
 A01,NA,cyc,inside,1,4,0,0,0,The Streakers,
 A02,NA,cyc,inside,1,2,0,1,1,Athlete's Foot,
 A03,NA,cyc,inside,1,2,0,2,2,MicroMarkums,"We put our plate by the eyewash station, lots of foot traffic nearby"
