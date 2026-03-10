@@ -87,7 +87,13 @@ clean3 <- sheet3 %>% clean_names() %>%
 ```
 
 ```{r}
-test <- clean
+test <- list(clean1, clean2, clean3)
+```
+```{r}
+test2 <- test %>% 
+  reduce(full_join, by = "section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",
+"days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies",
+"year")
 ```
 
 
