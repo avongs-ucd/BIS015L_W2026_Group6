@@ -362,4 +362,97 @@ fulldata %>%
              color=media_add))+
   geom_line()
 ```
+```{r}
+library(shiny)
+library(shinydashboard)
+```
+
+```{r, eval=F, echo=T}
+ui <- dashboardPage(
+  
+  dashboardHeader(title="Microbe Data"),
+  
+  dashboardSidebar(
+  
+    selectInput("year",
+              "Dataset Year:",
+              choices=sort(c("2023", "2024", "2026")),
+              selected="2023"),
+    
+    selectInput("plot",
+              "Select Plot Type",
+              choices = c("bar", "boxplot", "line"),
+              selected="bar"),
+  
+    selectInput("x",
+              "Select X Axis",
+              choices = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"),
+              selected="bar"),
+  
+      selectInput("y",
+              "Select Y Axis",
+              choices = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"),
+              selected="total_number_colonies")
+    
+  ),
+    
+    dashboardBody(
+      
+    plotOutput("plot", width="500px", height="400px")
+    
+  )
+  
+)
+
+server <- function(input, output, session) {
+  
+  output$plot <- renderPlot({
+    
+   # fulldata %>% 
+    #  ggplot(aes(.data[[input$y]]))+
+    #  geom_density(fill="steelblue",
+    #               color="black",
+     #              alpha=0.6)+
+    #  theme_light()
+    if (input$year == "2023") {
+      fulldata <- fulldata %>% 
+        filter(year == 2023)
+    }
+    else if (input$year == "2024") {
+      fulldata <- fulldata %>% 
+        filter(year == 2024)
+    } 
+    else if (input$year == "2026") {
+      fulldata <- fulldata %>%
+        filter(year == 2026)
+    }
+    
+  
+    if (input$plot == "bar") {
+      fulldata %>% 
+        ggplot(aes(x = section, y = total_number_colonies, fill = section)) +
+        geom_col() +
+        labs(title = "Total Colony Counts per Section") 
+      }
+    
+    else if (input$plot == "boxplot") {
+      fulldata %>%   
+        ggplot(aes(x = media_na_or_sda, y = total_number_colonies, color = media_na_or_sda)) +
+        geom_boxplot() +
+        labs(title = "Total Number of Colonies by Media Additive")
+      }
+    
+    else if (input$plot == "line") {
+      fulldata %>% 
+       ggplot(aes(x = exposure_duration_min, y = total_number_colonies, color = media_na_or_sda)) +
+        geom_line() +
+        labs(title = "Growth Over Time")
+      }
+    
+  })
+  
+}
+
+shinyApp(ui, server)
+```
 
