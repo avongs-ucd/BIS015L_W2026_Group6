@@ -1,0 +1,81 @@
+#Microbes Graphs for 2024
+library(tidyverse)
+library(googlesheets4)
+library(janitor)
+
+library(readr)
+raw_full_data_Section_A01_Will <- read_csv("C:/Users/lalva/OneDrive/Desktop/BIS015L_W2026_Group6-main/Microbes_new/raw_full_data - Section A01 Will.csv")
+View(raw_full_data_Section_A01_Will)
+
+#Cleaning
+raw_full_data_Section_A01_Will <- raw_full_data_Section_A01_Will %>%
+  clean_names()
+
+#This is for pivoting locations
+raw_full_data_Section_A01_Will <-  raw_full_data_Section_A01_Will %>% 
+  pivot_longer(cols="inside_or_outside",
+               values_to = "location") %>% 
+  mutate(location=str_to_title(location))
+
+#This is for pivioting additives
+raw_full_data_Section_A01_Will <- raw_full_data_Section_A01_Will %>% 
+  pivot_longer(cols = "media_additive_none_cyc_or_amp",
+               names_to = "media_additive",
+               values_to = "media_add") %>% 
+  mutate(media_add=str_to_title(media_add))
+
+#Bar Graph Visualization
+
+raw_full_data_Section_A01_Will %>% 
+  select(section,total_number_colonies_both_mold_non_mold_colonies_cumulative_counts_from_both_days) %>%
+  ggplot(aes(x=section,y=total_number_colonies_both_mold_non_mold_colonies_cumulative_counts_from_both_days,fill = section))+
+  geom_col()+
+  labs(title = "Section per Total Colony Counts")
+
+raw_full_data_Section_A01_Will %>% 
+  select(section,number_non_mold_looking_colonies_e_g_no_hyphae) %>% 
+  ggplot(aes(x=section,y=number_non_mold_looking_colonies_e_g_no_hyphae,fill = section))+
+  geom_col()+
+  labs(title = "Section per Bacteria Looking Colonies")
+
+raw_full_data_Section_A01_Will %>% 
+  select(section,number_mold_looking_colonies_have_hyphae) %>% 
+  ggplot(aes(x=section,y=number_mold_looking_colonies_have_hyphae,fill = section))+
+  geom_col()+
+  labs(title = "Section per Mold Looking Colonies")
+
+
+#Boxplot Graph Visualization
+
+#To enable Faceting Otherwise Unneccicary
+raw_full_data_Section_A01_Will2 <- raw_full_data_Section_A01_Will %>% 
+  pivot_longer(cols = c("number_non_mold_looking_colonies_e_g_no_hyphae","number_mold_looking_colonies_have_hyphae"),
+               names_to = "colony_type",
+               values_to = "colony_count")
+raw_full_data_Section_A01_Will2 %>% 
+  ggplot(aes(x=location, y=colony_count, fill = colony_type))+
+  geom_boxplot(position = position_dodge(width=.8))+
+  facet_wrap(~location, scales="free")
+
+raw_full_data_Section_A01_Will %>% 
+  select(media_add,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
+  ggplot(aes(x=media_add,y=number_non_mold_looking_colonies_e_g_no_hyphae,color=media_add))+
+  geom_boxplot()+
+  labs(title = "Media Additive per Bacteria Looking Colonies")
+
+raw_full_data_Section_A01_Will %>%
+  select(media_add,number_mold_looking_colonies_have_hyphae) %>% 
+  ggplot(aes(x=media_add,y=number_mold_looking_colonies_have_hyphae,color=media_add))+
+  geom_boxplot()+
+  labs(title = "Media Additive per Mold Looking Colonies")
+
+#Line Graph Visualization
+
+raw_full_data_Section_A01_Will %>%
+  group_by(media_add, exposure_duration_min) %>%
+  summarize(mean_colony_counts = mean(total_number_colonies_both_mold_non_mold_colonies_cumulative_counts_from_both_days, na.rm = TRUE)) %>%
+  ggplot(aes(x=exposure_duration_min,
+             y=mean_colony_counts, 
+             group=media_add,
+             color=media_add))+
+  geom_line()
