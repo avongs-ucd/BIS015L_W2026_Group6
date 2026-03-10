@@ -80,6 +80,7 @@ clean3 <- sheet3 %>% clean_names() %>%
   mutate(across(where(is.list), as.double)) %>%
   rename( "total_number_colonies" = "total_number_colonies_both_mold_non_mold_colonies_cumulative_counts_from_both_days") %>%  # - Alan
   mutate(year = "2026") %>% #added to mark year of data - Alan 
+  mutate(number_mold_looking_colonies_have_hyphae = as.numeric(number_mold_looking_colonies_have_hyphae)) %>% # - Alan 
   select(-"group_name",-"notes",-"name_of_the_data_recorder") #removed names of data recorders - Alan 
   #mutate(number_mold_looking_colonies_have_hyphae=recode(number_mold_looking_colonies_have_hyphae,
                                                #          "NA"=0))
@@ -87,13 +88,12 @@ clean3 <- sheet3 %>% clean_names() %>%
 ```
 
 ```{r}
-test <- list(clean1, clean2, clean3)
+test <- full_join(clean1, clean2, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many")
 ```
 ```{r}
-test2 <- test %>% 
-  reduce(full_join, by = "section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",
-"days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies",
-"year")
+fulldata <- full_join(test, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many")
 ```
+
+
 
 
