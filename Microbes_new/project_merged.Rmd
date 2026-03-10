@@ -100,6 +100,8 @@ clean_data_mold3 %>%
   ggplot(aes(x=section,y=n,fill=section))+
   geom_col() #why no work?
 ```
+
+
 ## microbes graph code 2:
 
 ```{r}
@@ -132,62 +134,72 @@ clean_data_mold %>%
   geom_col() #section and mold
 ```
 
-
-
-
-
-
+```{r}
 clean_data_mold2 <- clean_data_mold %>% 
   pivot_longer(cols="Inside or Outside",
                values_to = "Location") %>% 
   clean_names() %>% 
   mutate(location=str_to_title(location))
+```
 
+```{r}
 names(clean_data_mold2)
+```
 
+```{r}
 clean_data_mold2 %>% 
   select(location,number_bacteria_looking_colonies,number_mold_looking_colonies_hyphae) %>%
   ggplot(aes(x=number_bacteria_looking_colonies,y=number_mold_looking_colonies_hyphae,color=location))+
   geom_jitter(size=2.8,alpha=.8) #bacteria and mold vs inside outside, dot plot is not great try something else
+```
 
-
-
-
+```{r}
 clean_data_mold3 <- clean_data_mold2 %>% 
   pivot_longer(cols = "media_additive",
                names_to = "media_additive",
                values_to = "media_add") %>% 
   mutate(media_add=str_to_title(media_add))
+```
 
+```{r}
 clean_data_mold3 %>% 
   select(media_add)
+```
 
+```{r}
 clean_data_mold3 %>%
   select(media_add,number_bacteria_looking_colonies) %>%
   ggplot(aes(x=media_add,y=number_bacteria_looking_colonies,color=media_add))+
   geom_boxplot() #media add and bacteria
+```
 
+```{r}
 clean_data_mold3 %>%
   select(media_add,number_mold_looking_colonies_hyphae) %>%
   ggplot(aes(x=media_add,y=number_mold_looking_colonies_hyphae,color=media_add))+
   geom_boxplot() #media add and mold
+```
 
+```{r}
 names(clean_data_mold3)
+```
 
+```{r}
 clean_data_mold3 %>% 
   select(section,media_add) %>% 
   filter(media_add=="Amp") %>% 
   count(media_add) %>% 
   ggplot(aes(x=section,y=n,fill=section))+
   geom_col() #why no work?
+```
 
-
+```{r}
   clean_data_mold3 %>% 
     select(exposure_duration_min,total_colony_counts, media_add) %>% 
     ggplot(aes(x=exposure_duration_min,y=total_colony_counts, color = media_add,group=media_add))+
     stat_summary(fun=mean, geom="line",linewidth=1)+
     stat_summary(fun=mean, geom="point",size=3)
-
+```
 
 
 #Microbes Graphs for 2023
