@@ -11,6 +11,8 @@ library(ggplot2)
 library(dplyr)
 ```
 
+## Data Acquisition & Cleaning - Luis Barraza
+
 ```{r}
 sheet1 <- read_csv("data/Microbes data - 2023.csv")
 ```
@@ -87,13 +89,16 @@ clean3 <- sheet3 %>% clean_names() %>%
 #do a mutate string replace or if else to replace o=0 in hyphae column (currently an NA on clean3) someone fucked up in my class swear to god not me.
 ```
 
-```{r}
-test <- full_join(clean1, clean2, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many")
-```
-```{r}
-fulldata <- full_join(test, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many")
+```{r} 
+test <- full_join(clean1, clean2, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many") # merging csv files - Alan
 ```
 
+```{r}
+fulldata <- full_join(test, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many") # merging csv files pt 2 - Alan
+```
+
+
+## Data Graphing - Luis Alvarez
 ```{r}
 #This is for pivoting locations
 fulldata <-  fulldata %>% 
@@ -362,6 +367,8 @@ fulldata %>%
              color=media_add))+
   geom_line()
 ```
+
+## Shiny App - Alan Vongsavanh
 ```{r}
 library(shiny)
 library(shinydashboard)
@@ -376,8 +383,8 @@ ui <- dashboardPage(
   
     selectInput("year",
               "Dataset Year:",
-              choices=sort(c("2023", "2024", "2026")),
-              selected="2023"),
+              choices=sort(c("all", "2023", "2024", "2026")),
+              selected="all"),
     
     selectInput("plot",
               "Select Plot Type",
@@ -385,13 +392,13 @@ ui <- dashboardPage(
               selected="bar"),
   
     selectInput("x",
-              "Select X Axis",
-              choices = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"),
+              "Select X Axis", 
+              choices = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year", "location", "media_add"),
               selected="bar"),
   
       selectInput("y",
               "Select Y Axis",
-              choices = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"),
+              choices = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year", "location", "media_add"),
               selected="total_number_colonies")
     
   ),
@@ -414,7 +421,9 @@ server <- function(input, output, session) {
     #               color="black",
      #              alpha=0.6)+
     #  theme_light()
-    if (input$year == "2023") {
+    
+    #code to filter the year options
+    if (input$year == "2023") { 
       fulldata <- fulldata %>% 
         filter(year == 2023)
     }
@@ -426,26 +435,26 @@ server <- function(input, output, session) {
       fulldata <- fulldata %>%
         filter(year == 2026)
     }
-    
   
+    #code for plotting
     if (input$plot == "bar") {
       fulldata %>% 
-        ggplot(aes(x = section, y = total_number_colonies, fill = section)) +
+        ggplot(aes(x = .data[[input$x]], y = .data[[input$y]], fill = year)) + 
         geom_col() +
         labs(title = "Total Colony Counts per Section") 
       }
     
     else if (input$plot == "boxplot") {
       fulldata %>%   
-        ggplot(aes(x = media_na_or_sda, y = total_number_colonies, color = media_na_or_sda)) +
+        ggplot(aes(x = .data[[input$x]], y = .data[[input$y]], color = year)) +
         geom_boxplot() +
         labs(title = "Total Number of Colonies by Media Additive")
       }
-    
+
     else if (input$plot == "line") {
-      fulldata %>% 
-       ggplot(aes(x = exposure_duration_min, y = total_number_colonies, color = media_na_or_sda)) +
-        geom_line() +
+      fulldata %>%
+       ggplot(aes(x = .data[[input$x]], y = .data[[input$y]])) + 
+        geom_line()
         labs(title = "Growth Over Time")
       }
     
