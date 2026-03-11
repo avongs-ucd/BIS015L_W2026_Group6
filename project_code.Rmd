@@ -443,37 +443,29 @@ names(fulldata)
 ui <- dashboardPage(
   skin = "green",
   dashboardHeader(title="Microbe Data"),
-  
   dashboardSidebar(
-  
     selectInput("year",
               "Dataset Year:",
               choices=sort(c("All Years" = "all", "2023", "2024", "2026")),
               selected="all"),
-    
     hr(),
-    
     selectInput("plot",
               "Select Plot Type",
               choices = c("Barplot" = "bar", "Boxplot" = "boxplot", "Line Graph" = "line"),
               selected="bar"),
-  
+    hr(),  
     selectInput("x",
               "Select X Axis", 
               choices = c("section", "media_na_or_sda", "exposure_duration_min",  "days_of_incubation", "mold_col", "bact_col", "total_number_colonies", "year", "resistance", "mold_resist", "bact_resist", "location", "media_add"),
               selected="bar"),
-  
-      selectInput("y",
+    hr(),  
+    selectInput("y",
               "Select Y Axis",
               choices = c("section", "media_na_or_sda", "exposure_duration_min",  "days_of_incubation", "mold_col", "bact_col", "total_number_colonies", "year", "resistance", "mold_resist", "bact_resist", "location", "media_add"),
               selected="total_number_colonies")
-    
   ),
-    
   #  dashboardBody(
-      
   #  plotOutput("plot", width="500px", height="400px")
-    
  # )
  dashboardBody( #test code
     # Embedding the 'cerulean' theme look into the Dashboard
@@ -483,28 +475,22 @@ ui <- dashboardPage(
       tags$style(HTML("
         .content-wrapper { background-color: #ffffff !important; }
         .main-header .logo { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-                             font-weight: bold; }
-      "))
+                             font-weight: bold; }"))
     ),
-    
     fluidRow(
       box(
-        title = "Microbial Analysis Visualization", 
+        title = "Microbial Data Visualization", 
         status = "primary", 
         solidHeader = TRUE, 
         width = 12,
         plotOutput("plot", height = "500px")
       )
     ),
-    
   )
-  
 )
 
 server <- function(input, output, session) {
-  
   output$plot <- renderPlot({
-    
    # fulldata %>% 
     #  ggplot(aes(.data[[input$y]]))+
     #  geom_density(fill="steelblue",
@@ -531,34 +517,25 @@ server <- function(input, output, session) {
       fulldata %>% 
         ggplot(aes(x = .data[[input$x]], y = .data[[input$y]], fill = year)) + 
         geom_col() +
-        labs(title = "Total Colony Counts per Section") 
+        labs(title = paste(input$y, "per", input$x))
       }
-    
     else if (input$plot == "boxplot") {
       fulldata %>%   
         ggplot(aes(x = .data[[input$x]], y = .data[[input$y]], color = year)) +
         geom_boxplot() +
-        labs(title = "Total Number of Colonies by Media Additive")
+        labs(title = paste(input$y, "per", input$x))
       }
-
     else if (input$plot == "line") {
       linedata <- fulldata %>%
-        group_by(year, media_add, exposure_duration_min) %>%
+        group_by(year, media_add, .data[[input$x]]) %>%
         summarize(mean_val = mean(.data[[input$y]], na.rm = TRUE), .groups = "drop") 
-      
-      ggplot(linedata, aes(x = as.factor(exposure_duration_min), y = mean_val, 
+      ggplot(linedata, aes(x = as.factor(.data[[input$x]]), y = mean_val, 
                                  group = media_add, color = media_add)) + 
       geom_line(size = 1) + geom_point() +
-        
-        #ggplot(aes(x = .data[[input$x]], y = .data[[input$y]], color = year)) + 
-        #geom_line() +
-        labs(title = "Growth Over Time")
+        labs(title = paste(input$y, "per", input$x))
       }
-    
   })
-  
 }
-
 shinyApp(ui, server)
 ```
 
