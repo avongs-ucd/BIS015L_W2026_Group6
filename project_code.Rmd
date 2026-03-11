@@ -92,7 +92,7 @@ fulldata <- bind_rows(clean1, clean2, clean3) %>% # - Alan
 ```
 
 ```{r}
-#This is for pivoting locations
+#This is for pivoting locations - Luis A. 
 fulldata <-  fulldata %>% 
   pivot_longer(cols="inside_or_outside",
                values_to = "location") %>% 
@@ -114,39 +114,8 @@ fulldata2 <- fulldata %>%
 #Consistent for all three years
 ```
 
-# Extra Analysis/Plotting - Luis Barraza
-RUNS A BOXPLOT MAPPING RESISTANCE OVER THE YEARS
-```{r}
-fulldata %>%
-  mutate(year=as.factor(year)) %>%
-  ggplot(aes(x=year, y=total_number_colonies)) +
-  geom_boxplot(aes(fill = resistance))
-```
 
-COMPARES BOXPLOTS OF RESISTANCE INDOOR VS OUTDOOR
-```{r}
-fulldata %>%
-  mutate(year=as.factor(year)) %>%
-  filter(resistance!="Unknown") %>%
-  ggplot(aes(x=year, y=total_number_colonies)) +
-  geom_boxplot(aes(fill = location)) 
-```
-
-
-COUNTS BACTERIAL RESISTANCE
-```{r}
-fulldata %>%
-  filter(bresistance != "Unknown") %>%
-  count(bresistance)
-```
-
-COUNTS MOLD RESISTANCE
-```{r}
-fulldata %>%
-  filter(mresistance!="Unknown") %>%
-  count(mresistance)
-```
-
+## Data Graphing - Luis Alvarez
 ```{r}
 #Microbes Graphs for 2023
 
@@ -249,18 +218,18 @@ fulldata %>%
        y="Total Colony Count")
 
 fulldata %>%
-  select(year,section,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
+  select(year,section,bact_col) %>%
   filter(year == "2024") %>%
-  ggplot(aes(x=section,y=number_non_mold_looking_colonies_e_g_no_hyphae,fill = section))+
+  ggplot(aes(x=section,y=bact_col,fill = section))+
   geom_col()+
   coord_cartesian(ylim = c(0, 1300)) +
   labs(title = "Section per Bacteria Looking Colonies",
        y="Total Bacteria Count")
 
 fulldata %>%
-  select(year,section,number_mold_looking_colonies_have_hyphae) %>%
+  select(year,section,mold_col) %>%
   filter(year == "2024") %>%
-  ggplot(aes(x=section,y=number_mold_looking_colonies_have_hyphae,fill = section))+
+  ggplot(aes(x=section,y=mold_col,fill = section))+
   geom_col()+
   coord_cartesian(ylim = c(0, 1300)) +
   labs(title = "Section per Mold Looking Colonies",
@@ -283,18 +252,18 @@ fulldata2 %>%
   coord_cartesian(ylim = c(0, 300))
 
 fulldata %>%
-  select(year,media_add,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
+  select(year,media_add,bact_col) %>%
   filter(year == "2024") %>%
-  ggplot(aes(x=media_add,y=number_non_mold_looking_colonies_e_g_no_hyphae,color=media_add))+
+  ggplot(aes(x=media_add,y=bact_col,color=media_add))+
   geom_boxplot()+
   labs(title = "Media Additive per Bacteria Looking Colonies",
        x="Media Additive",
        y="Bacteria colony counts")
 
 fulldata %>%
-  select(year,media_add,number_mold_looking_colonies_have_hyphae) %>%
+  select(year,media_add,mold_col) %>%
   filter(year == "2024") %>%
-  ggplot(aes(x=media_add,y=number_mold_looking_colonies_have_hyphae,color=media_add))+
+  ggplot(aes(x=media_add,y=mold_col,color=media_add))+
   geom_boxplot()+
   labs(title = "Media Additive per Mold Looking Colonies",
        x="Media Additive",
@@ -332,18 +301,18 @@ fulldata %>%
        y="Total Colony Count")
 
 fulldata %>%
-  select(year,section,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
+  select(year,section,bact_col) %>%
   filter(year == "2026") %>%
-  ggplot(aes(x=section,y=number_non_mold_looking_colonies_e_g_no_hyphae,fill = section))+
+  ggplot(aes(x=section,y=bact_col,fill = section))+
   geom_col()+
   coord_cartesian(ylim = c(0, 1000)) +
   labs(title = "Section per Bacteria Looking Colonies",
        y="Total Bacteria Count")
 
 fulldata %>%
-  select(year,section,number_mold_looking_colonies_have_hyphae) %>%
+  select(year,section,mold_col) %>%
   filter(year == "2026") %>%
-  ggplot(aes(x=section,y=number_mold_looking_colonies_have_hyphae,fill = section))+
+  ggplot(aes(x=section,y=mold_col,fill = section))+
   geom_col()+
   coord_cartesian(ylim = c(0, 1000)) +
   labs(title = "Section per Mold Looking Colonies",
@@ -366,9 +335,9 @@ fulldata2 %>%
    coord_cartesian(ylim = c(0, 200))
 
 fulldata %>%
-  select(year,media_add,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
+  select(year,media_add,bact_col) %>%
   filter(year == "2026") %>%
-  ggplot(aes(x=media_add,y=number_non_mold_looking_colonies_e_g_no_hyphae,color=media_add))+
+  ggplot(aes(x=media_add,y=bact_col,color=media_add))+
   geom_boxplot()+
   labs(title = "Media Additive per Bacteria Looking Colonies",
        x="Media Additive",
@@ -376,9 +345,9 @@ fulldata %>%
   coord_cartesian(ylim = c(0, 200))
 
 fulldata %>%
-  select(year,media_add,number_mold_looking_colonies_have_hyphae) %>%
+  select(year,media_add,mold_col) %>%
   filter(year == "2026") %>%
-  ggplot(aes(x=media_add,y=number_mold_looking_colonies_have_hyphae,color=media_add))+
+  ggplot(aes(x=media_add,y=mold_col,color=media_add))+
   geom_boxplot()+
   labs(title = "Media Additive per Mold Looking Colonies",
        x="Media Additive",
@@ -403,7 +372,7 @@ fulldata %>%
        y="Average Colony Counts per exposure time")
 ```
 ```{r}
-resistanced %>%
+fulldata %>%
   filter(resistance!="Unknown") %>%
   mutate(year=as.factor(year)) %>%
   ggplot(aes(x=year, y=total_number_colonies)) +
@@ -412,306 +381,62 @@ resistanced %>%
        x="Years of study",
        y="Total colony counts")
 
-```
-```{r}
-resistanced %>%
+fulldata %>%
   mutate(year=as.factor(year)) %>%
   filter(resistance!="Unknown") %>%
   ggplot(aes(x=year, y=total_number_colonies)) +
-  geom_boxplot(aes(fill = resistance)) +
-  facet_wrap(~inside_or_outside, ncol=2, labeller=label_both) +
+  geom_boxplot(aes(fill = location)) +
   labs(title = "Antibiotic/Antifungal resistance IN/OUT",
        x="Years",
        y="Total Colony Counts")
 ```
+
+
+# Extra Analysis/Plotting - Luis Barraza
+RUNS A BOXPLOT MAPPING RESISTANCE OVER THE YEARS
 ```{r}
-bactresist <- resistancec %>%
-  filter(bresistance!="Unknown") %>%
-  count(bresistance)
-bactresist
-```
-```{r}
-molresist <- resistancec %>%
-  filter(mresistance!="Unknown") %>%
-  count(mresistance)
-molresist
+fulldata %>%
+  mutate(year=as.factor(year)) %>%
+  ggplot(aes(x=year, y=total_number_colonies)) +
+  geom_boxplot(aes(fill = resistance))
 ```
 
-## Data Graphing - Luis Alvarez
+COMPARES BOXPLOTS OF RESISTANCE INDOOR VS OUTDOOR
 ```{r}
-#This is for pivoting locations
-fulldata <-  fulldata %>% 
-  pivot_longer(cols="inside_or_outside",
-               values_to = "location") %>% 
-  mutate(location=str_to_title(location))
-
-#This is for pivoting additives
-fulldata <- fulldata %>% 
-  pivot_longer(cols = "media_additive_none_cyc_or_amp",
-               names_to = "media_additive",
-               values_to = "media_add") %>% 
-  mutate(media_add=str_to_title(media_add))
-
-#To enable Faceting Otherwise Unnecessary
-fulldata2 <- fulldata %>% 
-  pivot_longer(cols = c("number_mold_looking_colonies_have_hyphae","number_non_mold_looking_colonies_e_g_no_hyphae"),
-               names_to = "colony_type",
-               values_to = "colony_count")
-
-#Consistent for all three years
-
-
+fulldata %>%
+  mutate(year=as.factor(year)) %>%
+  filter(resistance!="Unknown") %>%
+  ggplot(aes(x=year, y=total_number_colonies)) +
+  geom_boxplot(aes(fill = location)) 
 ```
 
 
+COUNTS BACTERIAL RESISTANCE
 ```{r}
-#Microbes Graphs for 2023
-
-
-#Bar Graph Visualization
-
-fulldata %>% 
-  select(year,section,total_number_colonies) %>%
-  filter(year == "2023") %>%
-  ggplot(aes(x=section,y=total_number_colonies,fill = section))+
-  geom_col()+
-  labs(title = "Section per Total Colony Counts")
-
-fulldata %>% 
-  select(year,section,number_non_mold_looking_colonies_e_g_no_hyphae) %>% 
-  filter(year == "2023") %>%
-  ggplot(aes(x=section,y=number_non_mold_looking_colonies_e_g_no_hyphae,fill = section))+
-  geom_col()+
-  labs(title = "Section per Bacteria Looking Colonies")
-
-fulldata %>% 
-  select(year,section,number_mold_looking_colonies_have_hyphae) %>% 
-  filter(year == "2023") %>%
-  ggplot(aes(x=section,y=number_mold_looking_colonies_have_hyphae,fill = section))+
-  geom_col()+
-  labs(title = "Section per Mold Looking Colonies")
-
-
-#Boxplot Graph Visualization
-
-fulldata2 %>% 
-  filter(year == "2023") %>%
-  ggplot(aes(x=location, y=colony_count, fill = colony_type))+
-  geom_boxplot(position = position_dodge(width=.8))+
-  facet_wrap(~location, scales="free")
-
-fulldata %>% 
-  select(year,media_add,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
-  filter(year == "2023") %>%
-  ggplot(aes(x=media_add,y=number_non_mold_looking_colonies_e_g_no_hyphae,color=media_add))+
-  geom_boxplot()+
-  labs(title = "Media Additive per Bacteria Looking Colonies")
-
 fulldata %>%
-  select(year,media_add,number_mold_looking_colonies_have_hyphae) %>% 
-  filter(year == "2023") %>%
-  ggplot(aes(x=media_add,y=number_mold_looking_colonies_have_hyphae,color=media_add))+
-  geom_boxplot()+
-  labs(title = "Media Additive per Mold Looking Colonies")
-
-
-#Line Graph Visualization
-
-fulldata %>%
-  group_by(year,media_add, exposure_duration_min) %>%
-  filter(year == "2023") %>%
-  summarize(mean_colony_counts = mean(total_number_colonies, na.rm = TRUE)) %>%
-  ggplot(aes(x=exposure_duration_min,
-             y=mean_colony_counts, 
-             group=media_add,
-             color=media_add))+
-  geom_line()
+  filter(bact_resist != "Unknown") %>%
+  count(bact_resist)
 ```
 
+COUNTS MOLD RESISTANCE
 ```{r}
-#Microbes Graphs for 2024
-
-#Bar Graph Visualization
-
-fulldata %>% 
-  select(year,section,total_number_colonies) %>%
-  filter(year == "2024") %>%
-  ggplot(aes(x=section,y=total_number_colonies,fill = section))+
-  geom_col()+
-  labs(title = "Section per Total Colony Counts")
-
-fulldata %>% 
-  select(year,section,number_non_mold_looking_colonies_e_g_no_hyphae) %>% 
-  filter(year == "2024") %>%
-  ggplot(aes(x=section,y=number_non_mold_looking_colonies_e_g_no_hyphae,fill = section))+
-  geom_col()+
-  labs(title = "Section per Bacteria Looking Colonies")
-
-fulldata %>% 
-  select(year,section,number_mold_looking_colonies_have_hyphae) %>% 
-  filter(year == "2024") %>%
-  ggplot(aes(x=section,y=number_mold_looking_colonies_have_hyphae,fill = section))+
-  geom_col()+
-  labs(title = "Section per Mold Looking Colonies")
-
-
-#Boxplot Graph Visualization
-
-fulldata2 %>% 
-  filter(year == "2024") %>%
-  ggplot(aes(x=location, y=colony_count, fill = colony_type))+
-  geom_boxplot(position = position_dodge(width=.8))+
-  facet_wrap(~location, scales="free")
-
-fulldata %>% 
-  select(year,media_add,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
-  filter(year == "2024") %>%
-  ggplot(aes(x=media_add,y=number_non_mold_looking_colonies_e_g_no_hyphae,color=media_add))+
-  geom_boxplot()+
-  labs(title = "Media Additive per Bacteria Looking Colonies")
-
 fulldata %>%
-  select(year,media_add,number_mold_looking_colonies_have_hyphae) %>% 
-  filter(year == "2024") %>%
-  ggplot(aes(x=media_add,y=number_mold_looking_colonies_have_hyphae,color=media_add))+
-  geom_boxplot()+
-  labs(title = "Media Additive per Mold Looking Colonies")
-
-
-#Line Graph Visualization
-
-fulldata %>%
-  group_by(year,media_add, exposure_duration_min) %>%
-  filter(year == "2024") %>%
-  summarize(mean_colony_counts = mean(total_number_colonies, na.rm = TRUE)) %>%
-  ggplot(aes(x=exposure_duration_min,
-             y=mean_colony_counts, 
-             group=media_add,
-             color=media_add))+
-  geom_line()
-```
-
-```{r}
-#Microbes Graphs for 2026
-#Bar Graph Visualization
-
-fulldata %>% 
-  select(year,section,total_number_colonies) %>%
-  filter(year == "2026") %>%
-  ggplot(aes(x=section,y=total_number_colonies,fill = section))+
-  geom_col()+
-  labs(title = "Section per Total Colony Counts")
-
-fulldata %>% 
-  select(year,section,number_non_mold_looking_colonies_e_g_no_hyphae) %>% 
-  filter(year == "2026") %>%
-  ggplot(aes(x=section,y=number_non_mold_looking_colonies_e_g_no_hyphae,fill = section))+
-  geom_col()+
-  labs(title = "Section per Bacteria Looking Colonies")
-
-fulldata %>% 
-  select(year,section,number_mold_looking_colonies_have_hyphae) %>% 
-  filter(year == "2026") %>%
-  ggplot(aes(x=section,y=number_mold_looking_colonies_have_hyphae,fill = section))+
-  geom_col()+
-  labs(title = "Section per Mold Looking Colonies")
-
-
-#Boxplot Graph Visualization
-
-fulldata2 %>% 
-  filter(year == "2026") %>%
-  ggplot(aes(x=location, y=colony_count, fill = colony_type))+
-  geom_boxplot(position = position_dodge(width=.8))+
-  facet_wrap(~location, scales="free")
-
-fulldata %>% 
-  select(year,media_add,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
-  filter(year == "2026") %>%
-  ggplot(aes(x=media_add,y=number_non_mold_looking_colonies_e_g_no_hyphae,color=media_add))+
-  geom_boxplot()+
-  labs(title = "Media Additive per Bacteria Looking Colonies")
-
-fulldata %>%
-  select(year,media_add,number_mold_looking_colonies_have_hyphae) %>% 
-  filter(year == "2026") %>%
-  ggplot(aes(x=media_add,y=number_mold_looking_colonies_have_hyphae,color=media_add))+
-  geom_boxplot()+
-  labs(title = "Media Additive per Mold Looking Colonies")
-
-
-#Line Graph Visualization
-
-fulldata %>%
-  group_by(year,media_add, exposure_duration_min) %>%
-  filter(year == "2026") %>%
-  summarize(mean_colony_counts = mean(total_number_colonies, na.rm = TRUE)) %>%
-  ggplot(aes(x=exposure_duration_min,
-             y=mean_colony_counts, 
-             group=media_add,
-             color=media_add))+
-  geom_line()
-```
-```{r}
-#Microbes Graphs for All years
-#Bar Graph Visualization
-
-fulldata %>% 
-  select(section,total_number_colonies) %>%
-  ggplot(aes(x=section,y=total_number_colonies,fill = section))+
-  geom_col()+
-  labs(title = "Section per Total Colony Counts")
-
-fulldata %>% 
-  select(section,number_non_mold_looking_colonies_e_g_no_hyphae) %>% 
-  ggplot(aes(x=section,y=number_non_mold_looking_colonies_e_g_no_hyphae,fill = section))+
-  geom_col()+
-  labs(title = "Section per Bacteria Looking Colonies")
-
-fulldata %>% 
-  select(section,number_mold_looking_colonies_have_hyphae) %>% 
-  ggplot(aes(x=section,y=number_mold_looking_colonies_have_hyphae,fill = section))+
-  geom_col()+
-  labs(title = "Section per Mold Looking Colonies")
-
-
-#Boxplot Graph Visualization
-
-fulldata2 %>% 
-  ggplot(aes(x=location, y=colony_count, fill = colony_type))+
-  geom_boxplot(position = position_dodge(width=.8))+
-  facet_wrap(~location, scales="free")
-
-fulldata %>% 
-  select(media_add,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
-  ggplot(aes(x=media_add,y=number_non_mold_looking_colonies_e_g_no_hyphae,color=media_add))+
-  geom_boxplot()+
-  labs(title = "Media Additive per Bacteria Looking Colonies")
-
-fulldata %>%
-  select(media_add,number_mold_looking_colonies_have_hyphae) %>% 
-  ggplot(aes(x=media_add,y=number_mold_looking_colonies_have_hyphae,color=media_add))+
-  geom_boxplot()+
-  labs(title = "Media Additive per Mold Looking Colonies")
-
-
-#Line Graph Visualization
-
-fulldata %>%
-  group_by(media_add, exposure_duration_min) %>%
-  summarize(mean_colony_counts = mean(total_number_colonies, na.rm = TRUE)) %>%
-  ggplot(aes(x=exposure_duration_min,
-             y=mean_colony_counts, 
-             group=media_add,
-             color=media_add))+
-  geom_line()
+  filter(mold_resist!="Unknown") %>%
+  count(mold_resist)
 ```
 
 
 ## Shiny App - Alan Vongsavanh
 ```{r}
 library(shiny)
+library(shinythemes)
 library(shinydashboard)
+library(ggthemes)
+library(RColorBrewer)
+library(paletteer)
+```
+```{r}
+names(fulldata)
 ```
 
 ```{r, eval=F, echo=T}
@@ -730,24 +455,47 @@ ui <- dashboardPage(
     
     selectInput("plot",
               "Select Plot Type",
-              choices = c("bar", "boxplot", "line"),
+              choices = c("Barplot" = "bar", "Boxplot" = "boxplot", "Line Graph" = "line"),
               selected="bar"),
   
     selectInput("x",
               "Select X Axis", 
-              choices = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year", "location", "media_add"),
+              choices = c("section", "media_na_or_sda", "exposure_duration_min",  "days_of_incubation", "mold_col", "bact_col", "total_number_colonies", "year", "resistance", "mold_resist", "bact_resist", "location", "media_add"),
               selected="bar"),
   
       selectInput("y",
               "Select Y Axis",
-              choices = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year", "location", "media_add"),
+              choices = c("section", "media_na_or_sda", "exposure_duration_min",  "days_of_incubation", "mold_col", "bact_col", "total_number_colonies", "year", "resistance", "mold_resist", "bact_resist", "location", "media_add"),
               selected="total_number_colonies")
     
   ),
     
-    dashboardBody(
+  #  dashboardBody(
       
-    plotOutput("plot", width="500px", height="400px")
+  #  plotOutput("plot", width="500px", height="400px")
+    
+ # )
+ dashboardBody( #test code
+    # Embedding the 'cerulean' theme look into the Dashboard
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", 
+                href = shinythemes::shinytheme("cerulean")),
+      tags$style(HTML("
+        .content-wrapper { background-color: #ffffff !important; }
+        .main-header .logo { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+                             font-weight: bold; }
+      "))
+    ),
+    
+    fluidRow(
+      box(
+        title = "Microbial Analysis Visualization", 
+        status = "primary", 
+        solidHeader = TRUE, 
+        width = 12,
+        plotOutput("plot", height = "500px")
+      )
+    ),
     
   )
   
@@ -794,9 +542,16 @@ server <- function(input, output, session) {
       }
 
     else if (input$plot == "line") {
-      fulldata %>%
-       ggplot(aes(x = .data[[input$x]], y = .data[[input$y]])) + 
-        geom_line()
+      linedata <- fulldata %>%
+        group_by(year, media_add, exposure_duration_min) %>%
+        summarize(mean_val = mean(.data[[input$y]], na.rm = TRUE), .groups = "drop") 
+      
+      ggplot(linedata, aes(x = as.factor(exposure_duration_min), y = mean_val, 
+                                 group = media_add, color = media_add)) + 
+      geom_line(size = 1) + geom_point() +
+        
+        #ggplot(aes(x = .data[[input$x]], y = .data[[input$y]], color = year)) + 
+        #geom_line() +
         labs(title = "Growth Over Time")
       }
     
