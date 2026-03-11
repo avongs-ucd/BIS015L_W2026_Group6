@@ -92,7 +92,16 @@ clean3 <- sheet3 %>% clean_names() %>%
 ```
 
 ```{r}
-fulldata <- bind_rows(clean1, clean2, clean3) # - Alan
+fulldata <- bind_rows(clean1, clean2, clean3) %>% # - Alan
+    mutate(resistance = case_when( # true/false on if there is resistance 
+        media_na_or_sda == "NUA" & number_mold_looking_colonies_have_hyphae >= 1 ~ "T",
+        media_na_or_sda == "NUA" & number_mold_looking_colonies_have_hyphae < 1 ~ "F",
+        media_na_or_sda == "SDA" & number_non_mold_looking_colonies_e_g_no_hyphae >= 1 ~ "T",
+        media_na_or_sda == "SDA" & number_non_mold_looking_colonies_e_g_no_hyphae < 1 ~ "F",
+        TRUE ~ "Unknown")) %>% 
+    rename(mold_col=number_mold_looking_colonies_have_hyphae) %>%
+    rename(bact_col=number_non_mold_looking_colonies_e_g_no_hyphae)
+
 #Old method:
 #test <- full_join(clean1, clean2, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many") # merging csv files - Alan
 #fulldata <- full_join(test, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many") # merging csv files pt 2 - Alan 
@@ -100,20 +109,6 @@ fulldata <- bind_rows(clean1, clean2, clean3) # - Alan
 
 
 # Extra Analysis/Plotting - Luis Barraza
-UPDATES OUR FULL DATA TO INCLUDE A TRUE OR FALSE STATEMENT ON RESISTANCE
-```{r}
-resistanced <- fulldata %>%
-  mutate(resistance=case_when(media_na_or_sda== "NUA" & number_mold_looking_colonies_have_hyphae >=1 ~ "T",
-                              media_na_or_sda=="NUA" & number_mold_looking_colonies_have_hyphae <1 ~"F",
-       
-  media_na_or_sda=="SDA" & number_non_mold_looking_colonies_e_g_no_hyphae >=1 ~ "T",
-                              media_na_or_sda=="SDA" &
-                                number_non_mold_looking_colonies_e_g_no_hyphae <1 ~"F",
-                              TRUE ~ "Unknown")) %>%
-  rename(mold_col=number_mold_looking_colonies_have_hyphae) %>%
-  rename(bact_col=number_non_mold_looking_colonies_e_g_no_hyphae)
-```
-
 RUNS A BOXPLOT MAPPING RESISTANCE OVER THE YEARS
 ```{r}
 resistanced %>%
