@@ -15,13 +15,7 @@ library(dplyr)
 
 ```{r}
 sheet1 <- read_csv("data/Microbes data - 2023.csv")
-```
-
-```{r}
 sheet2 <- read_csv("data/Microbes data - 2024.csv")
-```
-
-```{r}
 sheet3 <- read_csv("data/Microbes data - 2026.csv")
 ```
 
@@ -32,24 +26,16 @@ clean1 <- sheet1 %>% clean_names() %>%
          exposure_duration_min=as.factor(exposure_duration_min),
          section=as.factor(section),
          media_additive_none_cyc_or_amp=as.factor(media_additive_none_cyc_or_amp)) %>%
-  mutate(media_na_or_sda= recode(media_na_or_sda,
-                                   "NA"="NUA",
-                                   "SDA"="SDA")) %>%
   mutate(media_na_or_sda = forcats::fct_na_value_to_level(media_na_or_sda, level = "NUA")) %>% # - Alan (Googled)
   mutate(year = "2023") %>% #added to mark year of data - Alan 
   select(!c("group_name","notes"))
-```
 
-```{r}
 clean2 <-  sheet2 %>% clean_names() %>%
   mutate(media_na_or_sda=as.factor(media_na_or_sda),
          inside_or_outside=as.factor(inside_or_outside),
          exposure_duration_min=as.factor(exposure_duration_min),
          section=as.factor(section),
          media_additive_none_cyc_or_amp=as.factor(media_additive_none_cyc_or_amp)) %>%
-  mutate(media_na_or_sda= recode(media_na_or_sda,
-                                   "NA"="NUA",
-                                   "SDA"="SDA")) %>%
   mutate(media_na_or_sda = forcats::fct_na_value_to_level(media_na_or_sda, level = "NUA")) %>% # - Alan (Googled)
   mutate(media_additive_none_cyc_or_amp= recode(media_additive_none_cyc_or_amp,
                                    "ampicillin"="amp",
@@ -58,19 +44,13 @@ clean2 <-  sheet2 %>% clean_names() %>%
                                    "AMP 50 ug"="amp")) %>%
   mutate(year = "2024") %>% #added to mark year of data - Alan 
   select(!c("group_name","notes"))
-```
 
-
-```{r}
 clean3 <- sheet3 %>% clean_names() %>%
   mutate(media_na_or_sda=as.factor(media_na_or_sda),
          inside_or_outside=as.factor(inside_or_outside),
          exposure_duration_min=as.factor(exposure_duration_min),
          section=as.factor(section),
          media_additive_none_cyc_or_amp=as.factor(media_additive_none_cyc_or_amp)) %>%
-  mutate(media_na_or_sda= recode(media_na_or_sda,
-                                   "NA"="NUA",
-                                   "SDA"="SDA")) %>%
   mutate(media_additive_none_cyc_or_amp= recode(media_additive_none_cyc_or_amp,
                                    "CHX"="cyc",
                                    "Amp"= "amp",
@@ -87,8 +67,6 @@ clean3 <- sheet3 %>% clean_names() %>%
   mutate(number_mold_looking_colonies_have_hyphae = is.numeric(number_mold_looking_colonies_have_hyphae)) %>% # - Alan
   rename(total_number_colonies=total_number_colonies_both_mold_non_mold_colonies_cumulative_counts_from_both_days)%>%
   select(!c("group_name","notes", "name_of_the_data_recorder"))
-  #mutate(number_mold_looking_colonies_have_hyphae=recode(number_mold_looking_colonies_have_hyphae,
-                                               #          "NA"=0))
 ```
 
 ```{r}
@@ -100,19 +78,46 @@ fulldata <- bind_rows(clean1, clean2, clean3) %>% # - Alan
         media_na_or_sda == "SDA" & number_non_mold_looking_colonies_e_g_no_hyphae < 1 ~ "F",
         TRUE ~ "Unknown")) %>% 
     rename(mold_col=number_mold_looking_colonies_have_hyphae) %>%
-    rename(bact_col=number_non_mold_looking_colonies_e_g_no_hyphae)
+    rename(bact_col=number_non_mold_looking_colonies_e_g_no_hyphae) %>% 
+    mutate(mold_resist=case_when(media_na_or_sda== "NUA" & mold_col >=1 ~ "T", #counting how many have resistance to mold
+                              media_na_or_sda=="NUA" & mold_col <1 ~"F",
+                              TRUE ~ "Unknown")) %>%
+    mutate(bact_resist=case_when(media_na_or_sda=="SDA" & bact_col >=1 ~ "T", #counting how many have resistance to bacteria
+                              media_na_or_sda=="SDA" & bact_col <1 ~"F",
+                              TRUE ~ "Unknown")) 
 
 #Old method:
 #test <- full_join(clean1, clean2, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many") # merging csv files - Alan
 #fulldata <- full_join(test, clean3, by = c("section", "media_na_or_sda", "media_additive_none_cyc_or_amp", "inside_or_outside", "exposure_duration_min",  "days_of_incubation", "number_mold_looking_colonies_have_hyphae", "number_non_mold_looking_colonies_e_g_no_hyphae", "total_number_colonies", "year"), relationship = "many-to-many") # merging csv files pt 2 - Alan 
 ```
 
+```{r}
+#This is for pivoting locations
+fulldata <-  fulldata %>% 
+  pivot_longer(cols="inside_or_outside",
+               values_to = "location") %>% 
+  mutate(location=str_to_title(location))
+
+#This is for pivoting additives
+fulldata <- fulldata %>% 
+  pivot_longer(cols = "media_additive_none_cyc_or_amp",
+               names_to = "media_additive",
+               values_to = "media_add") %>% 
+  mutate(media_add=str_to_title(media_add))
+
+#To enable Faceting Otherwise Unnecessary
+fulldata2 <- fulldata %>% 
+  pivot_longer(cols = c("mold_col","bact_col"),
+               names_to = "colony_type",
+               values_to = "colony_count")
+
+#Consistent for all three years
+```
 
 # Extra Analysis/Plotting - Luis Barraza
 RUNS A BOXPLOT MAPPING RESISTANCE OVER THE YEARS
 ```{r}
-resistanced %>%
-  filter(resistance!="Unknown") %>%
+fulldata %>%
   mutate(year=as.factor(year)) %>%
   ggplot(aes(x=year, y=total_number_colonies)) +
   geom_boxplot(aes(fill = resistance))
@@ -120,42 +125,26 @@ resistanced %>%
 
 COMPARES BOXPLOTS OF RESISTANCE INDOOR VS OUTDOOR
 ```{r}
-resistanced %>%
+fulldata %>%
   mutate(year=as.factor(year)) %>%
   filter(resistance!="Unknown") %>%
   ggplot(aes(x=year, y=total_number_colonies)) +
-  geom_boxplot(aes(fill = resistance)) +
-  facet_wrap(~inside_or_outside, ncol=2, labeller=label_both)
+  geom_boxplot(aes(fill = location)) 
 ```
 
-MAKES A NEW DATA SET COUNTING WHICH COLONY TYPE HAS MORE RESISTANCE
-```{r}
-resistancec <- fulldata %>%
-  mutate(mresistance=case_when(media_na_or_sda== "NUA" & number_mold_looking_colonies_have_hyphae >=1 ~ "T",
-                              media_na_or_sda=="NUA" & number_mold_looking_colonies_have_hyphae <1 ~"F",
-                              TRUE ~ "Unknown")) %>%
-  mutate(bresistance=case_when(media_na_or_sda=="SDA" & number_non_mold_looking_colonies_e_g_no_hyphae >=1 ~ "T",
-                              media_na_or_sda=="SDA" &
-                                number_non_mold_looking_colonies_e_g_no_hyphae <1 ~"F",
-                              TRUE ~ "Unknown")) %>%
-  rename(mold_col=number_mold_looking_colonies_have_hyphae) %>%
-  rename(bact_col=number_non_mold_looking_colonies_e_g_no_hyphae)
-```
 
 COUNTS BACTERIAL RESISTANCE
 ```{r}
-bactresist <- resistancec %>%
-  filter(bresistance!="Unknown") %>%
+fulldata %>%
+  filter(bresistance != "Unknown") %>%
   count(bresistance)
-bactresist
 ```
 
 COUNTS MOLD RESISTANCE
 ```{r}
-molresist <- resistancec %>%
+fulldata %>%
   filter(mresistance!="Unknown") %>%
   count(mresistance)
-molresist
 ```
 
 ```{r}
@@ -174,18 +163,18 @@ fulldata %>%
        y="Total Colony Count")
 
 fulldata %>%
-  select(year,section,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
+  select(year,section,bact_col) %>%
   filter(year == "2023") %>%
-  ggplot(aes(x=section,y=number_non_mold_looking_colonies_e_g_no_hyphae,fill = section))+
+  ggplot(aes(x=section,y=bact_col,fill = section))+
   geom_col()+
   coord_cartesian(ylim = c(0, 600)) +
   labs(title = "Section per Bacteria Looking Colonies",
        y="Total Bacteria Count")
 
 fulldata %>%
-  select(year,section,number_mold_looking_colonies_have_hyphae) %>%
+  select(year,section,mold_col) %>%
   filter(year == "2023") %>%
-  ggplot(aes(x=section,y=number_mold_looking_colonies_have_hyphae,fill = section))+
+  ggplot(aes(x=section,y=mold_col,fill = section))+
   geom_col()+
   coord_cartesian(ylim = c(0, 600)) +
   labs(title = "Section per Mold Looking Colonies",
@@ -208,9 +197,9 @@ fulldata2 %>%
   coord_cartesian(ylim = c(0, 210))
 
 fulldata %>%
-  select(year,media_add,number_non_mold_looking_colonies_e_g_no_hyphae) %>%
+  select(year,media_add,bact_col) %>%
   filter(year == "2023") %>%
-  ggplot(aes(x=media_add,y=number_non_mold_looking_colonies_e_g_no_hyphae,color=media_add))+
+  ggplot(aes(x=media_add,y=bact_col,color=media_add))+
   geom_boxplot()+
   labs(title = "Media Additive per Bacteria Looking Colonies",
        x="Media Additive",
@@ -218,9 +207,9 @@ fulldata %>%
   coord_cartesian(ylim = c(0, 200))
 
 fulldata %>%
-  select(year,media_add,number_mold_looking_colonies_have_hyphae) %>%
+  select(year,media_add,mold_col) %>%
   filter(year == "2023") %>%
-  ggplot(aes(x=media_add,y=number_mold_looking_colonies_have_hyphae,color=media_add))+
+  ggplot(aes(x=media_add,y=mold_col,color=media_add))+
   geom_boxplot()+
   labs(title = "Media Additive per Mold Looking Colonies",
        x="Media Additive",
@@ -727,15 +716,17 @@ library(shinydashboard)
 
 ```{r, eval=F, echo=T}
 ui <- dashboardPage(
-  
+  skin = "green",
   dashboardHeader(title="Microbe Data"),
   
   dashboardSidebar(
   
     selectInput("year",
               "Dataset Year:",
-              choices=sort(c("all", "2023", "2024", "2026")),
+              choices=sort(c("All Years" = "all", "2023", "2024", "2026")),
               selected="all"),
+    
+    hr(),
     
     selectInput("plot",
               "Select Plot Type",
