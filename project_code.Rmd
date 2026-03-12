@@ -11,8 +11,8 @@ library(ggplot2)
 library(dplyr)
 ```
 
-## Data Acquisition & Cleaning - Luis Barraza
 
+## Data Acquisition & Cleaning - Luis Barraza
 ```{r}
 sheet1 <- read_csv("data/Microbes data - 2023.csv")
 sheet2 <- read_csv("data/Microbes data - 2024.csv")
@@ -110,7 +110,6 @@ fulldata2 <- fulldata %>%
   pivot_longer(cols = c("mold_col","bact_col"),
                names_to = "colony_type",
                values_to = "colony_count")
-
 #Consistent for all three years
 ```
 
@@ -119,9 +118,7 @@ fulldata2 <- fulldata %>%
 ```{r}
 #Microbes Graphs for 2023
 
-
 #Bar Graph Visualization
-
 fulldata %>%
   select(year,section,total_number_colonies) %>%
   filter(year == "2023") %>%
@@ -130,7 +127,6 @@ fulldata %>%
   coord_cartesian(ylim = c(0, 600)) +
   labs(title = "Section per Total Colony Counts",
        y="Total Colony Count")
-
 fulldata %>%
   select(year,section,bact_col) %>%
   filter(year == "2023") %>%
@@ -139,7 +135,6 @@ fulldata %>%
   coord_cartesian(ylim = c(0, 600)) +
   labs(title = "Section per Bacteria Looking Colonies",
        y="Total Bacteria Count")
-
 fulldata %>%
   select(year,section,mold_col) %>%
   filter(year == "2023") %>%
@@ -151,7 +146,6 @@ fulldata %>%
 
 
 #Boxplot Graph Visualization
-
 fulldata2 %>%
   filter(year == "2023") %>%
   mutate(colony_type=recode(colony_type,
@@ -164,7 +158,6 @@ fulldata2 %>%
        x="Location",
        y="Total colony counts")+
   coord_cartesian(ylim = c(0, 210))
-
 fulldata %>%
   select(year,media_add,bact_col) %>%
   filter(year == "2023") %>%
@@ -174,7 +167,6 @@ fulldata %>%
        x="Media Additive",
        y="Bacteria colony counts")+
   coord_cartesian(ylim = c(0, 200))
-
 fulldata %>%
   select(year,media_add,mold_col) %>%
   filter(year == "2023") %>%
@@ -187,7 +179,6 @@ fulldata %>%
 
 
 #Line Graph Visualization
-
 fulldata %>%
   group_by(year,media_add, exposure_duration_min) %>%
   filter(year == "2023") %>%
@@ -202,12 +193,11 @@ fulldata %>%
        x="Exposure Duration minutes",
        y="Average Colony Counts per exposure time")
 ```
+
 ```{r}
 #Microbes Graphs for 2024
 
-
 #Bar Graph Visualization
-
 fulldata %>%
   select(year,section,total_number_colonies) %>%
   filter(year == "2024") %>%
@@ -216,7 +206,6 @@ fulldata %>%
   coord_cartesian(ylim = c(0, 1300)) +
   labs(title = "Section per Total Colony Counts",
        y="Total Colony Count")
-
 fulldata %>%
   select(year,section,bact_col) %>%
   filter(year == "2024") %>%
@@ -225,7 +214,6 @@ fulldata %>%
   coord_cartesian(ylim = c(0, 1300)) +
   labs(title = "Section per Bacteria Looking Colonies",
        y="Total Bacteria Count")
-
 fulldata %>%
   select(year,section,mold_col) %>%
   filter(year == "2024") %>%
@@ -237,7 +225,6 @@ fulldata %>%
 
 
 #Boxplot Graph Visualization
-
 fulldata2 %>%
   filter(year == "2024") %>%
   mutate(colony_type=recode(colony_type,
@@ -250,7 +237,6 @@ fulldata2 %>%
        x="Location",
        y="Total colony counts")+
   coord_cartesian(ylim = c(0, 300))
-
 fulldata %>%
   select(year,media_add,bact_col) %>%
   filter(year == "2024") %>%
@@ -259,7 +245,6 @@ fulldata %>%
   labs(title = "Media Additive per Bacteria Looking Colonies",
        x="Media Additive",
        y="Bacteria colony counts")
-
 fulldata %>%
   select(year,media_add,mold_col) %>%
   filter(year == "2024") %>%
@@ -271,7 +256,6 @@ fulldata %>%
 
 
 #Line Graph Visualization
-
 fulldata %>%
   group_by(year,media_add, exposure_duration_min) %>%
   filter(year == "2024") %>%
@@ -286,11 +270,11 @@ fulldata %>%
        x="Exposure Duration minutes",
        y="Average Colony Counts per exposure time")
 ```
+
 ```{r}
 #Microbes Graphs for 2026
 
 #Bar Graph Visualization
-
 fulldata %>%
   select(year,section,total_number_colonies) %>%
   filter(year == "2026") %>%
@@ -299,7 +283,6 @@ fulldata %>%
   coord_cartesian(ylim = c(0, 1000)) +
   labs(title = "Section per Total Colony Counts",
        y="Total Colony Count")
-
 fulldata %>%
   select(year,section,bact_col) %>%
   filter(year == "2026") %>%
@@ -308,7 +291,6 @@ fulldata %>%
   coord_cartesian(ylim = c(0, 1000)) +
   labs(title = "Section per Bacteria Looking Colonies",
        y="Total Bacteria Count")
-
 fulldata %>%
   select(year,section,mold_col) %>%
   filter(year == "2026") %>%
@@ -320,7 +302,6 @@ fulldata %>%
 
 
 #Boxplot Graph Visualization
-
 fulldata2 %>%
   filter(year == "2026") %>%
   mutate(colony_type=recode(colony_type,
@@ -333,7 +314,6 @@ fulldata2 %>%
        x="Location",
        y="Total colony counts")+
    coord_cartesian(ylim = c(0, 200))
-
 fulldata %>%
   select(year,media_add,bact_col) %>%
   filter(year == "2026") %>%
@@ -343,7 +323,6 @@ fulldata %>%
        x="Media Additive",
        y="Bacteria colony counts") +
   coord_cartesian(ylim = c(0, 200))
-
 fulldata %>%
   select(year,media_add,mold_col) %>%
   filter(year == "2026") %>%
@@ -356,7 +335,6 @@ fulldata %>%
 
 
 #Line Graph Visualization
-
 fulldata %>%
   group_by(year,media_add, exposure_duration_min) %>%
   filter(year == "2026") %>%
@@ -371,6 +349,7 @@ fulldata %>%
        x="Exposure Duration minutes",
        y="Average Colony Counts per exposure time")
 ```
+
 ```{r}
 fulldata %>%
   filter(resistance!="Unknown") %>%
@@ -393,33 +372,26 @@ fulldata %>%
 
 
 # Extra Analysis/Plotting - Luis Barraza
-RUNS A BOXPLOT MAPPING RESISTANCE OVER THE YEARS
 ```{r}
+# RUNS A BOXPLOT MAPPING RESISTANCE OVER THE YEARS
 fulldata %>%
   mutate(year=as.factor(year)) %>%
   ggplot(aes(x=year, y=total_number_colonies)) +
   geom_boxplot(aes(fill = resistance))
-```
 
-COMPARES BOXPLOTS OF RESISTANCE INDOOR VS OUTDOOR
-```{r}
+# COMPARES BOXPLOTS OF RESISTANCE INDOOR VS OUTDOOR
 fulldata %>%
   mutate(year=as.factor(year)) %>%
   filter(resistance!="Unknown") %>%
   ggplot(aes(x=year, y=total_number_colonies)) +
   geom_boxplot(aes(fill = location)) 
-```
 
-
-COUNTS BACTERIAL RESISTANCE
-```{r}
+# COUNTS BACTERIAL RESISTANCE
 fulldata %>%
   filter(bact_resist != "Unknown") %>%
   count(bact_resist)
-```
 
-COUNTS MOLD RESISTANCE
-```{r}
+# COUNTS MOLD RESISTANCE
 fulldata %>%
   filter(mold_resist!="Unknown") %>%
   count(mold_resist)
@@ -461,21 +433,37 @@ ui <- dashboardPage(
     hr(),  
     selectInput("y",
               "Select Y Axis",
-              choices = c("section", "media_na_or_sda", "exposure_duration_min",  "days_of_incubation", "mold_col", "bact_col", "total_number_colonies", "year", "resistance", "mold_resist", "bact_resist", "location", "media_add"),
-              selected="total_number_colonies")
+              choices = c("section", "media_na_or_sda", "exposure_duration_min",  "days_of_incubation", "mold_col", "bact_col", "total_number_colonies", "resistance", "mold_resist", "bact_resist", "location", "media_add"),
+              selected="total_number_colonies"),
+    hr(),  
+      conditionalPanel(
+      condition = "input.plot == 'line'",
+      selectInput("line_color", "Group/Color by:",
+                  choices = c("location", "media_na_or_sda", "resistance", "mold_resist", "bact_resist", "location"),
+                  selected = "media_na_or_sda")
+      )
   ),
-  #  dashboardBody(
-  #  plotOutput("plot", width="500px", height="400px")
- # )
- dashboardBody( #test code
-    # Embedding the 'cerulean' theme look into the Dashboard
+ dashboardBody( 
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", 
-                href = shinythemes::shinytheme("cerulean")),
+                href = shinythemes::shinytheme("sandstone")),
       tags$style(HTML("
+        body { font-size: 18px; }
         .content-wrapper { background-color: #ffffff !important; }
-        .main-header .logo { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-                             font-weight: bold; }"))
+        .main-header .logo { font-size: 26px; font-weight: bold; }
+        .data-card {
+          background-color: #f4f7f6;
+          border-left: 5px solid #27ae60;
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 20px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          font-size: 20px;
+        }
+        .data-card h4 { color: #2e4a31; font-size: 26px; margin-top: 0; }
+        .box-title { font-size: 28px !important; color: #333333; }
+      "
+        ))
     ),
     fluidRow(
       box(
@@ -498,7 +486,6 @@ server <- function(input, output, session) {
      #              alpha=0.6)+
     #  theme_light()
     
-    #code to filter the year options
     if (input$year == "2023") { 
       fulldata <- fulldata %>% 
         filter(year == 2023)
@@ -512,11 +499,10 @@ server <- function(input, output, session) {
         filter(year == 2026)
     }
   
-    #code for plotting
-    if (input$plot == "bar") {
-      fulldata %>% 
+    if (input$plot == "bar") { 
+       fulldata %>% 
         ggplot(aes(x = .data[[input$x]], y = .data[[input$y]], fill = year)) + 
-        geom_col() +
+        geom_col(position = "dodge") +
         labs(title = paste(input$y, "per", input$x))
       }
     else if (input$plot == "boxplot") {
@@ -525,12 +511,12 @@ server <- function(input, output, session) {
         geom_boxplot() +
         labs(title = paste(input$y, "per", input$x))
       }
-    else if (input$plot == "line") {
+    else if (input$plot == "line") { 
       linedata <- fulldata %>%
-        group_by(year, media_add, .data[[input$x]]) %>%
+        group_by(year, .data[[input$line_color]], .data[[input$x]]) %>%
         summarize(mean_val = mean(.data[[input$y]], na.rm = TRUE), .groups = "drop") 
       ggplot(linedata, aes(x = as.factor(.data[[input$x]]), y = mean_val, 
-                                 group = media_add, color = media_add)) + 
+                                 group = .data[[input$line_color]], color = .data[[input$line_color]])) + 
       geom_line(size = 1) + geom_point() +
         labs(title = paste(input$y, "per", input$x))
       }
