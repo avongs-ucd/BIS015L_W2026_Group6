@@ -455,9 +455,6 @@ library(ggthemes)
 library(RColorBrewer)
 library(paletteer)
 ```
-```{r}
-names(fulldata)
-```
 
 ```{r, eval=F, echo=T}
 ui <- dashboardPage(
