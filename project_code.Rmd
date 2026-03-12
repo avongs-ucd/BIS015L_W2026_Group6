@@ -496,27 +496,27 @@ ui <- dashboardPage(
       tags$link(rel = "stylesheet", type = "text/css", 
                 href = shinythemes::shinytheme("sandstone")),
       tags$style(HTML("
-        body { font-size: 18px; }
-        .content-wrapper { background-color: #ffffff !important; }
-        .main-header .logo { font-size: 26px; font-weight: bold; }
+        body { font-size: 16px; }
+        .content-wrapper { background-color: #e8f5e9 !important; }
+        .main-header .logo { font-size: 24px; font-weight: bold; }
         .data-card {
-          background-color: #f4f7f6;
+          background-color: #ffffff;
           border-left: 5px solid #27ae60;
           border-radius: 10px;
           padding: 20px;
           margin-bottom: 20px;
           box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-          font-size: 20px;
+          font-size: 18px;
         }
-        .data-card h4 { color: #2e4a31; font-size: 26px; margin-top: 0; }
-        .box-title { font-size: 28px !important; color: #333333; }
+        .data-card h4 { color: #2e7d32; font-size: 22px; margin-top: 0; }
+        .box-title { font-size: 24px !important; color: #333333; }
       "
         ))
     ),
     fluidRow(
       box(
         title = "Microbial Data Visualization", 
-        status = "primary", 
+        status = "success", 
         solidHeader = TRUE, 
         width = 12,
         plotOutput("plot", height = "500px")
@@ -527,13 +527,12 @@ ui <- dashboardPage(
 
 server <- function(input, output, session) {
   output$plot <- renderPlot({
-   # fulldata %>% 
-    #  ggplot(aes(.data[[input$y]]))+
-    #  geom_density(fill="steelblue",
-    #               color="black",
-     #              alpha=0.6)+
-    #  theme_light()
-    
+  bio_theme <- list(
+      theme_minimal(base_size = 16), 
+      scale_fill_viridis_d(option = "viridis", begin = 0.2, end = 0.8), 
+      scale_color_viridis_d(option = "viridis", begin = 0.2, end = 0.8),
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)))
+   
     if (input$year == "2023") { 
       fulldata <- fulldata %>% 
         filter(year == 2023)
@@ -548,25 +547,31 @@ server <- function(input, output, session) {
     }
   
     if (input$plot == "bar") { 
-       fulldata %>% 
+       p <- fulldata %>% 
         ggplot(aes(x = .data[[input$x]], y = .data[[input$y]], fill = year)) + 
         geom_col(position = "dodge") +
-        labs(title = paste(input$y, "per", input$x))
+        labs(title = paste(input$y, "per", input$x)) + 
+        theme_few(base_size = 16) + scale_color_paletteer_d("prism::flora")
+       p + bio_theme
       }
     else if (input$plot == "boxplot") {
-      fulldata %>%   
+      p <- fulldata %>%   
         ggplot(aes(x = .data[[input$x]], y = .data[[input$y]], color = year)) +
         geom_boxplot() +
-        labs(title = paste(input$y, "per", input$x))
+        labs(title = paste(input$y, "per", input$x)) +
+        theme_few(base_size = 16) + scale_color_paletteer_d("prism::flora")
+       p + bio_theme
       }
     else if (input$plot == "line") { 
       linedata <- fulldata %>%
         group_by(year, .data[[input$line_color]], .data[[input$x]]) %>%
         summarize(mean_val = mean(.data[[input$y]], na.rm = TRUE), .groups = "drop") 
-      ggplot(linedata, aes(x = as.factor(.data[[input$x]]), y = mean_val, 
+      p <- ggplot(linedata, aes(x = as.factor(.data[[input$x]]), y = mean_val, 
                                  group = .data[[input$line_color]], color = .data[[input$line_color]])) + 
       geom_line(size = 1) + geom_point() +
-        labs(title = paste(input$y, "per", input$x))
+        labs(title = paste(input$y, "per", input$x)) + 
+      theme_few(base_size = 16) + scale_color_paletteer_d("prism::flora")
+      p + bio_theme
       }
   })
 }
