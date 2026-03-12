@@ -114,7 +114,57 @@ fulldata2 <- fulldata %>%
 ```
 
 
-## Data Graphing - Luis Alvarez
+## Tables & Data Graphing - Luis Alvarez
+```{r}
+#Table Stuffs - Luis A
+
+#Summary Statistics of Colony Counts per Media Additive Organized by Year
+fulldata %>% 
+  group_by(year, media_add) %>%
+  summarize(min_colony_counts = min(total_number_colonies, na.rm = TRUE),
+            mean_colony_counts = mean(total_number_colonies, na.rm = TRUE),
+            median_colony_counts = median(total_number_colonies, na.rm = TRUE),
+            max_colony_counts = max(total_number_colonies, na.rm = TRUE)) %>%
+  arrange(year, media_add)
+
+#Bacteria colony summary stats
+fulldata %>% 
+  group_by(year) %>%
+  summarize(min_bacteria_colonies = min(bact_col, na.rm = TRUE),
+            mean_bacteria_colonies = mean(bact_col, na.rm = TRUE),
+            median_bacteria_colonies = median(bact_col, na.rm = TRUE),
+            max_bacteria_colonies = max(bact_col, na.rm = TRUE)) %>%
+  arrange(year)
+
+#Mold colony summary stats
+fulldata %>% 
+  group_by(year) %>%
+  summarize(min_mold_colonies = min(mold_col, na.rm = TRUE),
+            mean_mold_colonies = mean(mold_col, na.rm = TRUE),
+            median_mold_colonies = median(mold_col, na.rm = TRUE),
+            max_mold_colonies = max(mold_col, na.rm = TRUE)) %>%
+  arrange(year)
+
+#Total colony summary stats for outside vs inside
+fulldata %>% 
+  group_by(year, location) %>%
+  summarize(min_total_colonies = min(total_number_colonies, na.rm = TRUE),
+            mean_total_colonies = mean(total_number_colonies, na.rm = TRUE),
+            median_total_colonies = median(total_number_colonies, na.rm = TRUE),
+            max_total_colonies = max(total_number_colonies, na.rm = TRUE)) %>%
+  arrange(year, location)
+
+#Total colony summary stats for combined years by location
+fulldata %>% 
+  group_by(location) %>%
+  summarize(min_total_colonies = min(total_number_colonies, na.rm = TRUE),
+            mean_total_colonies = mean(total_number_colonies, na.rm = TRUE),
+            median_total_colonies = median(total_number_colonies, na.rm = TRUE),
+            max_total_colonies = max(total_number_colonies, na.rm = TRUE)) %>%
+  arrange(location)
+
+```
+
 ```{r}
 #Microbes Graphs for 2023
 
@@ -524,4 +574,3 @@ server <- function(input, output, session) {
 }
 shinyApp(ui, server)
 ```
-
