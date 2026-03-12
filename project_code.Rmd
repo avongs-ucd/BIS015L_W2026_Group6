@@ -116,8 +116,6 @@ fulldata2 <- fulldata %>%
 
 ## Tables & Data Graphing - Luis Alvarez
 ```{r}
-#Table Stuffs - Luis A
-
 #Summary Statistics of Colony Counts per Media Additive Organized by Year
 fulldata %>% 
   group_by(year, media_add) %>%
