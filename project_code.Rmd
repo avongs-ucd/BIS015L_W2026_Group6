@@ -1,5 +1,7 @@
 ---
 title: "project_code"
+author: "Alan Vongsavanh, Luis Alvarez, and Luis Barraza"
+date: "`r Sys.Date()`"
 output: html_document
 ---
 
@@ -14,12 +16,14 @@ library(dplyr)
 
 ## Data Acquisition & Cleaning - Luis Barraza
 ```{r}
+# loading data 
 sheet1 <- read_csv("data/Microbes data - 2023.csv")
 sheet2 <- read_csv("data/Microbes data - 2024.csv")
 sheet3 <- read_csv("data/Microbes data - 2026.csv")
 ```
 
 ```{r}
+# cleaning data in each sheet
 clean1 <- sheet1 %>% clean_names() %>%
   mutate(media_na_or_sda=as.factor(media_na_or_sda),
          inside_or_outside=as.factor(inside_or_outside),
@@ -70,6 +74,7 @@ clean3 <- sheet3 %>% clean_names() %>%
 ```
 
 ```{r}
+# combining all sheets into one sheet 
 fulldata <- bind_rows(clean1, clean2, clean3) %>% # - Alan
     mutate(resistance = case_when( # true/false on if there is resistance 
         media_na_or_sda == "NUA" & number_mold_looking_colonies_have_hyphae >= 1 ~ "T",
@@ -399,6 +404,7 @@ fulldata %>%
 ```
 
 ```{r}
+# more graphing
 fulldata %>%
   filter(resistance!="Unknown") %>%
   mutate(year=as.factor(year)) %>%
@@ -448,6 +454,7 @@ fulldata %>%
 
 ## Shiny App - Alan Vongsavanh
 ```{r}
+# loading libraries for app
 library(shiny)
 library(shinythemes)
 library(shinydashboard)
